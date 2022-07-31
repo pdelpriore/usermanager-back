@@ -46,32 +46,27 @@ export class AddUserResolver {
     @Arg("userProfileInput", () => UserProfileInputType, { nullable: true })
     userProfileInput?: UserProfileInputType
   ) {
-    if (userInput.type === UserType.ADMIN) {
-      const adminProfile = AdminProfile.create({
-        ...adminProfileInput,
-      });
-      await adminProfile.save();
+    const profileName =
+      userInput.type === UserType.ADMIN ? "adminProfile" : "userProfile";
 
-      const user = User.create({
-        ...userInput,
-        adminProfile: adminProfile,
-      });
-      await user.save();
+    const profile =
+      userInput.type === UserType.ADMIN
+        ? AdminProfile.create({
+            ...adminProfileInput,
+          })
+        : UserProfile.create({
+            ...userProfileInput,
+          });
 
-      return true;
-    } else if (userInput.type === UserType.USER) {
-      const userProfile = UserProfile.create({
-        ...userProfileInput,
-      });
-      await userProfile.save();
+    await profile.save();
 
-      const user = User.create({
-        ...userInput,
-        userProfile: userProfile,
-      });
-      await user.save();
+    const user = User.create({
+      ...userInput,
+      [profileName]: profile,
+    });
 
-      return true;
-    }
+    await user.save();
+
+    return true;
   }
 }

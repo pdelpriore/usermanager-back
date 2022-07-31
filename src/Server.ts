@@ -13,7 +13,7 @@ const app: Application = express();
 app.use(express.json());
 
 const runServer = async () => {
-  const port = process.env.SERVER_PORT;
+  const port = process.env.PORT;
 
   const corsOptions = {
     origin: process.env.CORS_ORIGIN_URL,
