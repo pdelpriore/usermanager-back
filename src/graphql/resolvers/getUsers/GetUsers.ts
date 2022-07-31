@@ -18,6 +18,7 @@ export class getUsersResolver {
       where: { type: UserType.ADMIN },
       relations: ["adminProfile", "charts"],
     });
+
     const users = await User.find({
       where: { type: UserType.USER },
       relations: ["userProfile", "charts"],
